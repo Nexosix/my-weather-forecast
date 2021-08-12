@@ -1,1 +1,3 @@
-# my-weather-forecast
+# My Weather Forecast
+
+Project for practice
