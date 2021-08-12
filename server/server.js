@@ -1,11 +1,15 @@
 const express = require("express");
+const routes = require('./routes');
 const app = express()
 const port = 3000
 
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
+app.use(express.urlencoded({extended: true}));
+app.use('/api', routes);
 
-app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`);
-});
+const main = () => {
+    app.listen(port, () => {
+        console.log(`My Forecast Weather App listening at http://localhost:${port}`);
+    });
+}
+
+main();
