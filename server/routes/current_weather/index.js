@@ -10,6 +10,7 @@ module.exports = async (req, res) => {
         let name = data.data.name;
         let temp = parseInt(Math.round(parseFloat(data.data.main.temp), 0));
         let desc = data.data.weather[0].description;
+        let icon = data.data.weather[0].icon;
 
         let datetime = new Date(data.data.dt * 1000).toLocaleString().split(' ');
         let date = datetime[0].slice(0, -1);
@@ -20,7 +21,8 @@ module.exports = async (req, res) => {
             temp: temp,
             desc: desc,
             date: date,
-            time: time
+            time: time,
+            icon: icon
         });
         
     } catch(error) {
