@@ -11,6 +11,7 @@ function QuickInfo(props) {
         icon: ""
     });
 
+
     function getWeatherData(city) {
         let options = {
             method: 'GET',
@@ -41,12 +42,14 @@ function QuickInfo(props) {
         <Card>
             <CardMedia className="weather-icon" component="img" image={data.icon} title="Weather Icon" />
             <CardContent>
-                <Typography component="h4" variant="h4">{data.name}</Typography>
-                <Typography>{data.temp}</Typography>
-                <Typography>{data.time}</Typography>
+                <Typography component="h2" variant="h2">{data.temp}</Typography>
+                <Typography component="h5" variant="h5">{data.name}</Typography>
+                <br />
+                <Typography component="p" variant="body2">Data aktualizacji: {data.time}</Typography>
             </CardContent>
             <CardActions>
-            <Button variant="contained" color="primary" onClick={() => getWeatherData(props.city)}>Odśwież</Button>
+                <Button variant="contained" color="primary" onClick={() => getWeatherData(props.city)}>Odśwież</Button>
+                <Button variant="contained" color="secondary" onClick={() => props.toggleMoreInfo(props.city)}>Pokaż więcej</Button>
             </CardActions>
         </Card>
     )
