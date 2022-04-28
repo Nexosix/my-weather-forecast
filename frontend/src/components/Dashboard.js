@@ -7,7 +7,7 @@ function Dashboard(props) {
 
   const [detailedInfo, setDetailedInfo] = useState(null);
 
-  function toggleMoreInfo(city) {
+  const toggleMoreInfo = (city) => {
     if (detailedInfo === city) {
       setDetailedInfo(null);
       return;
@@ -23,25 +23,25 @@ function Dashboard(props) {
           <Grid item xs={12}>
             <Typography component="h3" variant="h3">My Weather Forecast</Typography>
           </Grid>
+
+          <Grid item xs={12}>
+            {detailedInfo ? <DetailedInfo city={detailedInfo} /> : null}
+          </Grid>
           
           <Grid item xs={12}>
             <Grid container spacing={2} align="center" alignItems="center" style={{ maxWidth: '50vw' }}>
-              <Grid item xs={12} md={4}>
+              <Grid item md={12} lg={4}>
                 <QuickInfo city="Szczecin" toggleMoreInfo={toggleMoreInfo} ></QuickInfo>
               </Grid>
   
-              <Grid item xs={12} md={4}>
+              <Grid item md={12} lg={4}>
                 <QuickInfo city="Police" toggleMoreInfo={toggleMoreInfo}></QuickInfo>
               </Grid>
   
-              <Grid item xs={12} md={4}>
+              <Grid item md={12} lg={4}>
                 <QuickInfo city="Koszalin" toggleMoreInfo={toggleMoreInfo}></QuickInfo>
               </Grid>
             </Grid>
-          </Grid>
-
-          <Grid item xs={12}>
-            {detailedInfo ? <DetailedInfo city={detailedInfo} /> : ""}
           </Grid>
         </Grid>
       </div>

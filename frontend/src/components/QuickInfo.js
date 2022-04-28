@@ -10,9 +10,9 @@ function QuickInfo(props) {
         time: "",
         icon: ""
     });
+    const [moreInfo, setMoreInfo] = useState(false);
 
-
-    function getWeatherData(city) {
+    const getWeatherData = (city) => {
         let options = {
             method: 'GET',
             headers: {
@@ -23,20 +23,24 @@ function QuickInfo(props) {
         fetch(`http://127.0.0.1:8080/api/current-weather/${city}/PL-32/PL`, options)
             .then(response => response.json())
             .then(data => {
-                console.log(JSON.stringify(data));
                 setData({
                     name: data.name,
                     temp: data.temp + "°",
                     date: data.date,
                     time: data.time,
-                    icon: "https://openweathermap.org/img/wn/" + data.icon + ".png"
+                    icon: "https://openweathermap.org/img/wn/" + data.icon + "@2x.png"
                 })
             });
     }
 
+    const handleMoreInfo = () => {
+        props.toggleMoreInfo(props.city);
+        moreInfo === true ? setMoreInfo(false) : setMoreInfo(true);
+    } 
+
     useEffect(() => {
         getWeatherData(props.city);
-    }, [props.city]);
+    }, []);
 
     return(
         <Card>
@@ -49,7 +53,7 @@ function QuickInfo(props) {
             </CardContent>
             <CardActions>
                 <Button variant="contained" color="primary" onClick={() => getWeatherData(props.city)}>Odśwież</Button>
-                <Button variant="contained" color="secondary" onClick={() => props.toggleMoreInfo(props.city)}>Pokaż więcej</Button>
+                <Button variant="contained" color="secondary" onClick={handleMoreInfo}>{moreInfo ? "Pokaż mniej" : "Pokaż więcej"}</Button>
             </CardActions>
         </Card>
     )
