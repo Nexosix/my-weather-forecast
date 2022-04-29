@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Typography, Button, Card, CardContent, CardActions, CardMedia } from "@material-ui/core";
+import { Grid, Typography, Button, Card, CardContent, CardActions, CardMedia, Box } from '@mui/material'
 
 function QuickInfo(props) {
 
@@ -10,8 +10,6 @@ function QuickInfo(props) {
         time: "",
         icon: ""
     });
-    const [moreInfo, setMoreInfo] = useState(false);
-
     const getWeatherData = (city) => {
         let options = {
             method: 'GET',
@@ -33,29 +31,34 @@ function QuickInfo(props) {
             });
     }
 
-    const handleMoreInfo = () => {
-        props.toggleMoreInfo(props.city);
-        moreInfo === true ? setMoreInfo(false) : setMoreInfo(true);
-    } 
-
     useEffect(() => {
         getWeatherData(props.city);
     }, []);
 
     return(
-        <Card>
-            <CardMedia className="weather-icon" component="img" image={data.icon} title="Weather Icon" />
-            <CardContent>
-                <Typography component="h2" variant="h2">{data.temp}</Typography>
-                <Typography component="h5" variant="h5">{data.name}</Typography>
-                <br />
-                <Typography component="p" variant="body2">Data aktualizacji: {data.time}</Typography>
-            </CardContent>
-            <CardActions>
-                <Button variant="contained" color="primary" onClick={() => getWeatherData(props.city)}>Odśwież</Button>
-                <Button variant="contained" color="secondary" onClick={handleMoreInfo}>{moreInfo ? "Pokaż mniej" : "Pokaż więcej"}</Button>
-            </CardActions>
-        </Card>
+        <Grid item 
+        xs={12} 
+        md={6} 
+        lg={3} 
+        align="center">
+
+                <Card 
+                elevation={16} 
+                sx={{
+                    height: 375
+                }}>
+                    <CardMedia className="weather-icon" component="img" image={data.icon} title="Weather Icon" />
+                    <CardContent>
+                        <Typography component="h2" variant="h2">{data.temp}</Typography>
+                        <Typography component="h5" variant="h4">{data.name}</Typography>
+                        <Typography component="p" variant="body2">Data aktualizacji: {data.time}</Typography>
+                    </CardContent>
+                    <CardActions>
+                        <Button color="primary" onClick={() => getWeatherData(props.city)}>Odśwież</Button>
+                        <Button variant="contained" color="primary" onClick={() => props.toggleMoreInfo(props.city)}>{props.active ? "Pokaż mniej" : "Pokaż więcej"}</Button>
+                    </CardActions>
+                </Card>
+        </Grid>
     )
 }
 

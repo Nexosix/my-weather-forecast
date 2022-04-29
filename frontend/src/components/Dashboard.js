@@ -1,7 +1,8 @@
-import { Grid, Typography } from '@material-ui/core';
+import { Box, Container, Grid, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import QuickInfo from './QuickInfo';
 import DetailedInfo from './DetailedInfo';
+import AddCity from './AddCity';
 
 function Dashboard(props) {
 
@@ -17,34 +18,27 @@ function Dashboard(props) {
   }
 
   return (
-      <div>
-        <Grid container align="center" alignItems="center" justifyContent="center" style={{ minHeight: '100vh' }}>
+      <Container sx={{ paddingY: 1 }}>
+        <Grid container rowSpacing={4} columnSpacing={2}>
   
-          <Grid item xs={12}>
-            <Typography component="h3" variant="h3">My Weather Forecast</Typography>
+          <Grid item xs={12} marginTop={3} marginBottom={2}>
+            <Box sx={{
+              textAlign: 'center'
+            }}>
+            <Typography component="h1" variant="h3">My Weather Forecast</Typography>
+            <Typography component="h2" variant="subtitle1">Check the weather in any city in Poland!</Typography>
+            </Box>
           </Grid>
 
-          <Grid item xs={12}>
-            {detailedInfo ? <DetailedInfo city={detailedInfo} /> : null}
-          </Grid>
-          
-          <Grid item xs={12}>
-            <Grid container spacing={2} align="center" alignItems="center" style={{ maxWidth: '50vw' }}>
-              <Grid item md={12} lg={4}>
-                <QuickInfo city="Szczecin" toggleMoreInfo={toggleMoreInfo} ></QuickInfo>
-              </Grid>
-  
-              <Grid item md={12} lg={4}>
-                <QuickInfo city="Police" toggleMoreInfo={toggleMoreInfo}></QuickInfo>
-              </Grid>
-  
-              <Grid item md={12} lg={4}>
-                <QuickInfo city="Koszalin" toggleMoreInfo={toggleMoreInfo}></QuickInfo>
-              </Grid>
-            </Grid>
-          </Grid>
+          <QuickInfo city="Szczecin" toggleMoreInfo={toggleMoreInfo} active={detailedInfo === "Szczecin"}/>
+          <QuickInfo city="Police" toggleMoreInfo={toggleMoreInfo} active={detailedInfo === "Police"}/>
+          <QuickInfo city="Koszalin" toggleMoreInfo={toggleMoreInfo} active={detailedInfo === "Koszalin"}/>
+          <AddCity />
+
+          {detailedInfo ? <Grid item xs={12}><DetailedInfo city={detailedInfo} /></Grid> : null}
+
         </Grid>
-      </div>
+      </Container>
   );
 }
 
