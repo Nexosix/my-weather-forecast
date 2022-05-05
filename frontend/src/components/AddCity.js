@@ -2,7 +2,17 @@ import { Autocomplete, Card, CardContent, Grid, IconButton, TextField, Typograph
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import cities from '../data/polandCities.json';
 
-const AddCity = () => {
+const AddCity = ({ handleAdd }) => {
+
+    const handleClick = () => {
+      const val = document.querySelector("#select-city").value;
+      if(!val) return;
+
+      const city = val.split(",")[0].trim();
+      const state = val.split(",")[1].trim();
+      handleAdd({ city, state });
+    }
+
     return (
         <Grid item xs={12} sm={6} md={4} lg={3} align="center">
             <Card sx={{ height: 375 }}>
@@ -15,7 +25,7 @@ const AddCity = () => {
                     renderInput={(params) => <TextField {...params} label="City" />}
                   />
                   
-                  <IconButton size="large" sx={{ marginTop: 2 }}>
+                  <IconButton size="large" sx={{ marginTop: 2 }} onClick={handleClick} >
                     <AddCircleIcon color="primary" sx={{ height: 50, width: 50 }}/>
                   </IconButton>
                 </CardContent>

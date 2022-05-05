@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Typography, Button, Card, CardContent, CardActions, CardMedia, Box, CardHeader } from '@mui/material'
+import { Grid, Typography, Button, Card, CardContent, CardActions, CardMedia, CardHeader, IconButton} from '@mui/material';
+import ClearIcon from '@mui/icons-material/Clear';
 
-function QuickInfo(props) {
+function QuickInfo({ location, onToggle, active, onDelete }) {
 
     const [data, setData] = useState({
         name: "",
@@ -10,7 +11,8 @@ function QuickInfo(props) {
         time: "",
         icon: ""
     });
-    const getWeatherData = (city) => {
+
+    const getWeatherData = (location) => {
         let options = {
             method: 'GET',
             headers: {
@@ -18,7 +20,7 @@ function QuickInfo(props) {
             }
         }
     
-        fetch(`http://127.0.0.1:8080/api/current-weather/${city}/PL-32/PL`, options)
+        fetch(`http://127.0.0.1:8080/api/current-weather/${location.city}/${location.state}/PL`, options)
             .then(response => response.json())
             .then(data => {
                 setData({
@@ -32,8 +34,12 @@ function QuickInfo(props) {
     }
 
     useEffect(() => {
-        getWeatherData(props.city);
+        getWeatherData(location);
     }, []);
+
+    const handleRemove = () => {
+        onDelete(location);
+    }
 
     return(
         <Grid item 
@@ -45,15 +51,20 @@ function QuickInfo(props) {
                 sx={{
                     height: 375
                 }}>
+                    <CardHeader action={
+                        <IconButton onClick={handleRemove}>
+                            <ClearIcon />
+                        </IconButton>
+                    } />
                     <CardMedia className="weather-icon" component="img" image={data.icon} title="Weather Icon" />
-                    <CardContent>
+                    <CardContent sx={{ paddingTop: 1 }}>
                         <Typography component="h2" variant="h2">{data.temp}</Typography>
-                        <Typography component="h3" variant="h5">{data.name}</Typography>
+                        <Typography component="h3" variant="h5">{location.city}</Typography>
                         <Typography component="p" variant="body2">Last update: {data.time}</Typography>
                     </CardContent>
                     <CardActions>
-                        <Button color="primary" onClick={() => getWeatherData(props.city)}>Refresh</Button>
-                        <Button variant="contained" color="primary" onClick={() => props.toggleMoreInfo(props.city)}>{props.active ? "Show more" : "Show less"}</Button>
+                        <Button color="primary" onClick={() => getWeatherData(location)}>Refresh</Button>
+                        <Button variant="contained" color="primary" onClick={() => onToggle(location.city)}>{active ? "Show less" : "Show more"}</Button>
                     </CardActions>
                 </Card>
         </Grid>
