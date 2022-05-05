@@ -19,7 +19,7 @@ function Dashboard(props) {
 
   return (
       <Container sx={{ paddingY: 1 }}>
-        <Grid container rowSpacing={4} columnSpacing={2}>
+        <Grid container rowSpacing={4} columnSpacing={2} justifyContent='center'>
   
           <Grid item xs={12} marginTop={3} marginBottom={2}>
             <Box sx={{
@@ -30,10 +30,13 @@ function Dashboard(props) {
             </Box>
           </Grid>
 
-          <QuickInfo city="Szczecin" toggleMoreInfo={toggleMoreInfo} active={detailedInfo === "Szczecin"}/>
-          <QuickInfo city="Police" toggleMoreInfo={toggleMoreInfo} active={detailedInfo === "Police"}/>
-          <QuickInfo city="Koszalin" toggleMoreInfo={toggleMoreInfo} active={detailedInfo === "Koszalin"}/>
-          <AddCity />
+          <Grid item xs={8} sm={12} >
+            <Grid container rowSpacing={4} columnSpacing={2} justifyContent="center" >
+              <QuickInfo city="Szczecin" toggleMoreInfo={toggleMoreInfo} active={detailedInfo === "Szczecin"}/>
+              <QuickInfo city="Police" toggleMoreInfo={toggleMoreInfo} active={detailedInfo === "Police"}/>
+              <AddCity />
+            </Grid>
+          </Grid>
 
           {detailedInfo ? <Grid item xs={12}><DetailedInfo city={detailedInfo} /></Grid> : null}
 

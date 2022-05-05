@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Typography, Button, Card, CardContent, CardActions, CardMedia, Box } from '@mui/material'
+import { Grid, Typography, Button, Card, CardContent, CardActions, CardMedia, Box, CardHeader } from '@mui/material'
 
 function QuickInfo(props) {
 
@@ -37,9 +37,7 @@ function QuickInfo(props) {
 
     return(
         <Grid item 
-        xs={12} 
-        md={6} 
-        lg={3} 
+        xs={12} sm={6} md={4} lg={3}
         align="center">
 
                 <Card 
@@ -50,12 +48,12 @@ function QuickInfo(props) {
                     <CardMedia className="weather-icon" component="img" image={data.icon} title="Weather Icon" />
                     <CardContent>
                         <Typography component="h2" variant="h2">{data.temp}</Typography>
-                        <Typography component="h5" variant="h4">{data.name}</Typography>
-                        <Typography component="p" variant="body2">Data aktualizacji: {data.time}</Typography>
+                        <Typography component="h3" variant="h5">{data.name}</Typography>
+                        <Typography component="p" variant="body2">Last update: {data.time}</Typography>
                     </CardContent>
                     <CardActions>
-                        <Button color="primary" onClick={() => getWeatherData(props.city)}>Odśwież</Button>
-                        <Button variant="contained" color="primary" onClick={() => props.toggleMoreInfo(props.city)}>{props.active ? "Pokaż mniej" : "Pokaż więcej"}</Button>
+                        <Button color="primary" onClick={() => getWeatherData(props.city)}>Refresh</Button>
+                        <Button variant="contained" color="primary" onClick={() => props.toggleMoreInfo(props.city)}>{props.active ? "Show more" : "Show less"}</Button>
                     </CardActions>
                 </Card>
         </Grid>
