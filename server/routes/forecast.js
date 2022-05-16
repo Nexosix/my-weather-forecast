@@ -12,11 +12,10 @@ module.exports = async (req, res) => {
     }
 
     try {
-        const { data: { current, daily, hourly } } = await axios.get(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lng}&exclude=minutely,alerts&appid=${process.env.API_KEY}&units=metric&lang=pl`);
-
-        current.temp = Math.round(current.temp);
+        const { data: { current, daily, hourly } } = await axios.get(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lng}&exclude=minutely,alerts&appid=${process.env.API_KEY}&units=metric`);
 
         res.json({ current, daily, hourly });
+        return;
 
     } catch(e) {
         console.error(e);

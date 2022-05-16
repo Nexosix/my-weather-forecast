@@ -1,5 +1,8 @@
 import { Grid, Typography, Button, Card, CardContent, CardActions, CardMedia, CardHeader, IconButton} from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 function QuickInfo({ location, id, data, active, onToggle, onDelete }) {
 
@@ -7,35 +10,47 @@ function QuickInfo({ location, id, data, active, onToggle, onDelete }) {
         onDelete(id);
     }
 
-    const time = new Date(data.dt * 1000);
-    const lastUpdate = time.toLocaleString().split(' ')[1].slice(0, -3);
+    let temperature = Math.round(data.temp);
 
     return(
         <Grid item 
         xs={12} sm={6} md={4} lg={3}
-        align="center">
+        align="center"
+        sx={{ height: 200 }} >
 
                 <Card 
                 elevation={16} 
-                sx={{
-                    height: 325
-                }}>
+                >
                     <CardHeader sx={{ paddingTop: 1, paddingBottom: 0 }} action={
-                        <IconButton onClick={handleRemove}>
-                            <ClearIcon />
-                        </IconButton>
+                        <CardActions>
+                            <IconButton onClick={() => onToggle(id)}>
+                                {active ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                            </IconButton>
+                            <IconButton onClick={() => alert('refresh')}>
+                                <RefreshIcon />
+                            </IconButton>
+                            <IconButton onClick={handleRemove}>
+                                <ClearIcon />
+                            </IconButton>
+                        </CardActions>
+ 
                     }/>
                     
-                    <CardContent sx={{ paddingTop: 0, paddingBottom: 1 }}>
-                        <CardMedia className="weather-icon" component="img" image={`http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`} title="Weather Icon" />
-                        <Typography component="h3" variant="h2">{data.temp}</Typography>
-                        <Typography component="h2" variant="h5">{location.city}</Typography>
-                        <Typography component="p" variant="body2">Last update: {lastUpdate}</Typography>
+                    <CardContent>
+                        <Grid container>
+                            <Grid item xs={6}>
+                                <Typography component="h3" variant="h2">{temperature}°</Typography>
+                                <Typography component="h2" variant="h5">{location.city}</Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <CardMedia className="weather-icon" component="img" image={`http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`} alt="" title="Weather Icon" />
+                            </Grid>
+                        </Grid>
                     </CardContent>
-                    <CardActions>
+                    {/* <CardActions>
                         <Button color="primary" size={'small'}>Refresh</Button>
                         <Button variant="contained" color="primary" onClick={() => onToggle(id)} size={'small'}>{active ? "Show less" : "Show more"}</Button>
-                    </CardActions>
+                    </CardActions> */}
                 </Card>
         </Grid>
     )

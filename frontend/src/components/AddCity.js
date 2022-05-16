@@ -16,7 +16,7 @@ const AddCity = ({ handleAdd }) => {
 
     return (
         <Grid item xs={12} sm={6} md={4} lg={3} align="center">
-            <Card elevation={16} sx={{ height: 325 }}>
+            <Card elevation={16} sx={{ height: 200 }}>
                 <CardContent sx={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
                   <Typography component="h4" variant="h5" sx={{ marginY: 4 }}>Choose city</Typography>
                   <Autocomplete
@@ -24,10 +24,10 @@ const AddCity = ({ handleAdd }) => {
                     options={cities}
                     getOptionLabel={(option) => `${option.city}, ${option.admin_name}`}
                     renderInput={(params) => <TextField {...params} label="City" />}
-                    sx={{ width: 250 }}
+                    sx={{ width: '100%' }}
                   />
                   
-                  <IconButton size="large" sx={{ marginTop: 2, width: 60, height: 60 }} onClick={handleClick} >
+                  <IconButton size="large" sx={{ width: 60, height: 60 }} onClick={handleClick} >
                     <AddCircleIcon color="primary" sx={{ height: 50, width: 50 }}/>
                   </IconButton>
                 </CardContent>

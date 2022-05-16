@@ -47,7 +47,7 @@ function Dashboard(props) {
 
         weatherData = await Promise.all(weatherData);
         const currentWeatherData = weatherData.map(data => data.current);
-        const detailedWeatherData = weatherData.map(data => data.hourly);
+        const detailedWeatherData = weatherData.map(data => data.daily.slice(0, 5));
         
         setLocationsCurrentData(currentWeatherData);
         setLocationsDetailedData(detailedWeatherData);
@@ -60,15 +60,15 @@ function Dashboard(props) {
 
   const handleToggleDetailedInfo = (id) => {
     if (detailedInfo === id) {
-      setDetailedInfo(null);
+      setDetailedInfo(-1);
       return;
     }
 
     setDetailedInfo(id);
   }
 
-  const handleDialogOpen = (location) => {
-    setLocationToRemove(location);
+  const handleDialogOpen = (id) => {
+    setLocationToRemove(id);
     setOpenDialog(true);
   }
 
@@ -82,7 +82,7 @@ function Dashboard(props) {
     setOpenDialog(false);
   }
 
-  const handleAddCard = (location) => {
+  const handleAddCard = async (location) => {
 
     for(let loc of locations) {
       if (loc.city === location.city && loc.state === location.state) {
@@ -102,31 +102,38 @@ function Dashboard(props) {
 
     setLocations(existingLocations);
     localStorage.setItem("locations", JSON.stringify(existingLocations));
+
+
+    const weatherData = await getForecastData(location);
+    
+    setLocationsCurrentData(prevState => [...prevState, weatherData.current]);
+    setLocationsDetailedData(prevState => [...prevState, weatherData.daily.slice(0, 5)]);
+    
     return;
   }
 
-  const deleteCard = (location) => {
+  const deleteCard = (id) => {
 
-    let existingLocations = JSON.parse(localStorage.getItem("locations"));
-    let locationId = -1;
-
-    for(let i = 0; i < existingLocations.length; i++) {
-      if (existingLocations[i].city === location.city && existingLocations[i].state === location.state) {
-        locationId = i;
-        break;
-      }
+    if(locations.length === 0 || locations[id] === undefined) {
+      return;
     }
 
-    if (locationId === -1) return;
+    const updatedLocations = [...locations];
+    const updatedCurrentData = [...locationsCurrentData];
+    const updatedDetailedData = [...locationsDetailedData];
+    updatedLocations.splice(id, 1);
+    updatedCurrentData.splice(id, 1);
+    updatedDetailedData.splice(id, 1);
 
-    console.log(locationId);
-    existingLocations.splice(locationId, 1);
-    setLocations(existingLocations);
-    localStorage.setItem("locations", JSON.stringify(existingLocations));
+    setLocationsCurrentData(updatedCurrentData);
+    setLocationsDetailedData(updatedDetailedData);
+
+    setLocations(updatedLocations);
+    localStorage.setItem("locations", JSON.stringify(updatedLocations));
   }
 
   return (
-      <Container sx={{ paddingY: 1 }}>
+      <Container sx={{ paddingTop: 5 }}>
         <Grid container rowSpacing={4} columnSpacing={2}>
   
           <Grid item xs={12} marginTop={3} marginBottom={2} justifyContent='center'>
@@ -139,10 +146,11 @@ function Dashboard(props) {
           </Grid>
 
           <Grid item xs={8} sm={12} >
-            <Grid container rowSpacing={4} columnSpacing={2} >
+            <Grid container rowSpacing={4} columnSpacing={2} sx={{ paddingTop: 0 }} >
               {isLoading && <Typography component="p" variant="h5">Loading...</Typography>}
-              {!isLoading && locationsCurrentData.map((data, index) => 
-                        <QuickInfo 
+              {!isLoading && locationsCurrentData.length > 0 && locationsCurrentData.map((data, index) => {
+                        if(locations[index] === undefined) return;
+                        return <QuickInfo 
                           key={index}
                           id={index}
                           location={locations[index]}
@@ -150,20 +158,33 @@ function Dashboard(props) {
                           active={detailedInfo === index}
                           onToggle={handleToggleDetailedInfo} 
                           onDelete={handleDialogOpen}
-                        />)
+                        />
+              })
               }
               <AddCity handleAdd={handleAddCard} />
             </Grid>
           </Grid>
 
-          {detailedInfo >= 0 ? <Grid item xs={12}><DetailedInfo city={detailedInfo} /></Grid> : null}
+          {(detailedInfo >= 0 && locations[detailedInfo] != undefined) && 
+            <Grid item xs={12}>
+              <DetailedInfo 
+                id={detailedInfo} 
+                location={locations[detailedInfo]} 
+                currentData={locationsCurrentData[detailedInfo]} 
+                dailyData={locationsDetailedData[detailedInfo]} 
+              />
+            </Grid>
+          }
 
         </Grid>
         <Dialog
           open={openDialog}
           onClose={handleDialogClose}
         >
-          <DialogTitle>Delete Card Info about {locationToRemove && locationToRemove.city}, {locationToRemove && locationToRemove.state} ?</DialogTitle>
+          <DialogTitle>
+            Delete  
+            {locations[locationToRemove] && ` ${locations[locationToRemove].city}, ${locations[locationToRemove].state}?`}
+          </DialogTitle>
           <DialogActions>
             <Button onClick={handleDialogClose}>No</Button>
             <Button onClick={handleDialogClose}>Yes</Button>
