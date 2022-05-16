@@ -10,22 +10,24 @@ const AddCity = ({ handleAdd }) => {
 
       const city = val.split(",")[0].trim();
       const state = val.split(",")[1].trim();
-      handleAdd({ city, state });
+      const {lat, lng} = cities.find(location => location.city === city && location.admin_name === state)
+      handleAdd({ city, state, lat, lng });
     }
 
     return (
         <Grid item xs={12} sm={6} md={4} lg={3} align="center">
-            <Card sx={{ height: 375 }}>
-                <CardContent>
-                  <Typography component="h4" variant="h6" sx={{ marginY: 4 }}>Choose city</Typography>
+            <Card elevation={16} sx={{ height: 325 }}>
+                <CardContent sx={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
+                  <Typography component="h4" variant="h5" sx={{ marginY: 4 }}>Choose city</Typography>
                   <Autocomplete
                     id="select-city"
                     options={cities}
                     getOptionLabel={(option) => `${option.city}, ${option.admin_name}`}
                     renderInput={(params) => <TextField {...params} label="City" />}
+                    sx={{ width: 250 }}
                   />
                   
-                  <IconButton size="large" sx={{ marginTop: 2 }} onClick={handleClick} >
+                  <IconButton size="large" sx={{ marginTop: 2, width: 60, height: 60 }} onClick={handleClick} >
                     <AddCircleIcon color="primary" sx={{ height: 50, width: 50 }}/>
                   </IconButton>
                 </CardContent>
