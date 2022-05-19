@@ -1,28 +1,29 @@
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Roboto';
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Roboto";
 }
 
-html, body {
-  height: 100%;
+html,
+body {
+    height: 100%;
 }
 
 body {
-  background-image: url('./images/clouds-background.jpg');
-  background-repeat: repeat-y;
-  background-size: 100% 100%;
+    background-image: url("./images/clouds-background.jpg");
+    background-repeat: repeat-y;
+    background-size: 100% 100%;
 }
 
 .center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .weather-icon {
-  max-height: 100px;
-  max-width: 100px;
+    max-height: 100px;
+    max-width: 100px;
 }
