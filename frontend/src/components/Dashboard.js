@@ -59,9 +59,14 @@ function Dashboard(props) {
                 const currentWeatherData = weatherData.map(
                     (data) => data.current
                 );
-                const detailedWeatherData = weatherData.map((data) =>
-                    data.daily.slice(0, 5)
-                );
+                const detailedWeatherData = weatherData.map((data) => {
+                    return {
+                        daily: data.daily.slice(0, 6),
+                        hourly: data.hourly.slice(0, 6),
+                    };
+                });
+
+                console.log(detailedWeatherData);
 
                 setLocationsCurrentData(currentWeatherData);
                 setLocationsDetailedData(detailedWeatherData);
@@ -121,9 +126,15 @@ function Dashboard(props) {
             ...prevState,
             weatherData.current,
         ]);
+
+        const detailedWeatherData = {
+            daily: weatherData.daily.slice(0, 6),
+            hourly: weatherData.hourly.slice(0, 6),
+        };
+
         setLocationsDetailedData((prevState) => [
             ...prevState,
-            weatherData.daily.slice(0, 5),
+            detailedWeatherData,
         ]);
 
         return;
@@ -150,7 +161,12 @@ function Dashboard(props) {
 
     return (
         <Container sx={{ paddingTop: 5 }}>
-            <Grid container rowSpacing={4} columnSpacing={2}>
+            <Grid
+                container
+                rowSpacing={4}
+                columnSpacing={2}
+                justifyContent="center"
+            >
                 <Grid
                     item
                     xs={12}
@@ -172,12 +188,14 @@ function Dashboard(props) {
                     </Box>
                 </Grid>
 
-                <Grid item xs={8} sm={12}>
+                <Grid item xs={10} sm={12}>
                     <Grid
                         container
-                        rowSpacing={4}
+                        rowSpacing={2}
                         columnSpacing={2}
-                        sx={{ paddingTop: 0 }}
+                        sx={{
+                            paddingTop: 0,
+                        }}
                     >
                         {isLoading && (
                             <Typography component="p" variant="h5">
@@ -187,7 +205,7 @@ function Dashboard(props) {
                         {!isLoading &&
                             locationsCurrentData.length > 0 &&
                             locationsCurrentData.map((data, index) => {
-                                if (locations[index] === undefined) return;
+                                if (locations[index] === undefined) return null;
                                 return (
                                     <QuickInfo
                                         key={index}
@@ -204,13 +222,18 @@ function Dashboard(props) {
                     </Grid>
                 </Grid>
 
-                {detailedInfo >= 0 && locations[detailedInfo] != undefined && (
+                {detailedInfo >= 0 && locations[detailedInfo] !== undefined && (
                     <Grid item xs={12}>
                         <DetailedInfo
                             id={detailedInfo}
                             location={locations[detailedInfo]}
                             currentData={locationsCurrentData[detailedInfo]}
-                            dailyData={locationsDetailedData[detailedInfo]}
+                            dailyData={
+                                locationsDetailedData[detailedInfo].daily
+                            }
+                            hourlyData={
+                                locationsDetailedData[detailedInfo].hourly
+                            }
                         />
                     </Grid>
                 )}

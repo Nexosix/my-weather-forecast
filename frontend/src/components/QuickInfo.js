@@ -21,15 +21,7 @@ function QuickInfo({ location, id, data, active, onToggle, onDelete }) {
     let temperature = Math.round(data.temp);
 
     return (
-        <Grid
-            item
-            xs={12}
-            sm={6}
-            md={4}
-            lg={3}
-            align="center"
-            sx={{ height: 200 }}
-        >
+        <Grid item xs={12} sm={6} md={4} lg={3} align="center">
             <Card elevation={16}>
                 <CardHeader
                     sx={{ paddingTop: 1, paddingBottom: 0 }}
@@ -73,10 +65,6 @@ function QuickInfo({ location, id, data, active, onToggle, onDelete }) {
                         </Grid>
                     </Grid>
                 </CardContent>
-                {/* <CardActions>
-                        <Button color="primary" size={'small'}>Refresh</Button>
-                        <Button variant="contained" color="primary" onClick={() => onToggle(id)} size={'small'}>{active ? "Show less" : "Show more"}</Button>
-                    </CardActions> */}
             </Card>
         </Grid>
     );

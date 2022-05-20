@@ -1,10 +1,16 @@
-import React from "react";
-import { Grid, Paper, Typography, Box } from "@mui/material";
+import React, { useState } from "react";
+import { Grid, Paper, Typography, Box, Tabs, Tab } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import NextDay from "./NextDay";
+import NextHour from "./NextHour";
 
-function DetailedInfo({ id, location, currentData, dailyData }) {
-    console.log(currentData.rain);
+function DetailedInfo({ id, location, currentData, dailyData, hourlyData }) {
+    const [activeTab, setActiveTab] = useState(0);
+
+    const handleTabChange = (event, value) => {
+        setActiveTab(value);
+    };
+
     const temperature = Math.round(currentData.temp);
     const feelsLike = Math.round(currentData.feels_like);
 
@@ -14,14 +20,15 @@ function DetailedInfo({ id, location, currentData, dailyData }) {
         .slice(0, -3);
 
     return (
-        <Paper elevation={16} sx={{ padding: 3, paddingBottom: 0 }}>
+        <Paper elevation={16} sx={{ padding: 3, paddingY: 0 }}>
             <Grid container justifyContent="center">
-                <Grid item xs={4}>
+                <Grid item xs={12} lg={3}>
                     <Box
                         sx={{
                             display: "flex",
                             alignItems: "center",
                             marginX: 0,
+                            marginTop: 2,
                         }}
                     >
                         <LocationOnIcon sx={{ fontSize: "32px" }} />
@@ -50,12 +57,32 @@ function DetailedInfo({ id, location, currentData, dailyData }) {
                     </Box>
                 </Grid>
 
-                <Grid item xs={8}>
-                    <Grid container justifyContent="center">
-                        {dailyData.map((day, index) => (
-                            <NextDay key={index} data={day} />
-                        ))}
-                    </Grid>
+                <Grid
+                    item
+                    xs={12}
+                    lg={9}
+                    sx={{ paddingLeft: 1, paddingTop: 1 }}
+                >
+                    <Tabs value={activeTab} onChange={handleTabChange}>
+                        <Tab label="Daily" />
+                        <Tab label="Hourly" />
+                    </Tabs>
+
+                    {activeTab === 0 && (
+                        <Grid container>
+                            {dailyData.map((day, index) => (
+                                <NextDay key={index} data={day} />
+                            ))}
+                        </Grid>
+                    )}
+
+                    {activeTab === 1 && (
+                        <Grid container>
+                            {hourlyData.map((day, index) => (
+                                <NextHour key={index} data={day} />
+                            ))}
+                        </Grid>
+                    )}
                 </Grid>
 
                 <Grid item xs={12} sx={{ marginTop: 2 }}>
