@@ -1,10 +1,8 @@
 import { Grid, Typography, Box } from "@mui/material";
 
-const NextDay = ({ data }) => {
-    const dayOfWeek = new Date(data.dt * 1000).toLocaleString("en", {
-        weekday: "long",
-    });
-    const temperature = Math.round(data.temp.day);
+const NextHour = ({ data }) => {
+    const hour = new Date(data.dt * 1000).toLocaleTimeString().slice(0, -3);
+    const temperature = Math.round(data.temp);
 
     return (
         <Grid item xs={4} sm={4} md={2} align="center">
@@ -20,10 +18,10 @@ const NextDay = ({ data }) => {
                 {temperature}°
             </Typography>
             <Typography component="p" variant="subtitle1" textAlign="center">
-                {dayOfWeek}
+                {hour}
             </Typography>
         </Grid>
     );
 };
 
-export default NextDay;
+export default NextHour;
