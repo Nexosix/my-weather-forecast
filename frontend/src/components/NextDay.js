@@ -4,7 +4,8 @@ const NextDay = ({ data }) => {
     const dayOfWeek = new Date(data.dt * 1000).toLocaleString("en", {
         weekday: "long",
     });
-    const temperature = Math.round(data.temp.day);
+    const temperatureDay = Math.round(data.temp.day);
+    const temperatureNight = Math.round(data.temp.night);
 
     return (
         <Grid item xs={4} sm={4} md={2} align="center">
@@ -16,8 +17,8 @@ const NextDay = ({ data }) => {
                     marginX: "auto",
                 }}
             />
-            <Typography component="p" variant="h5" textAlign="center">
-                {temperature}°
+            <Typography component="p" variant="h6" textAlign="center">
+                {temperatureDay}°/{temperatureNight}°
             </Typography>
             <Typography component="p" variant="subtitle1" textAlign="center">
                 {dayOfWeek}

@@ -21,47 +21,85 @@ function DetailedInfo({ id, location, currentData, dailyData, hourlyData }) {
 
     return (
         <Grid item xs={12}>
-            <Paper elevation={16} sx={{ padding: 3, paddingY: 0 }}>
-                <Grid container justifyContent="center">
-                    <Grid item xs={12} lg={3}>
-                        <Box
+            <Paper elevation={16} sx={{ paddingX: 3, paddingY: 0 }}>
+                <Grid container sx={{ minHeight: 270 }}>
+                    <Grid item xs={12} lg={4}>
+                        <Grid
+                            container
                             sx={{
                                 display: "flex",
-                                alignItems: "center",
-                                marginX: 0,
-                                marginTop: 2,
+                                flexDirection: "column",
+                                alignContent: "start",
                             }}
                         >
-                            <LocationOnIcon sx={{ fontSize: "32px" }} />
-                            <Typography
-                                component="h5"
-                                variant="h5"
-                                sx={{ display: "inline-block" }}
+                            <Grid item xs={12}>
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        marginX: 0,
+                                        paddingY: 2,
+                                    }}
+                                >
+                                    <LocationOnIcon sx={{ fontSize: "32px" }} />
+                                    <Typography
+                                        component="h6"
+                                        variant="h6"
+                                        sx={{
+                                            display: "inline-block",
+                                            paddingLeft: 2,
+                                        }}
+                                    >
+                                        {location.city}, {location.state}
+                                    </Typography>
+                                </Box>
+                            </Grid>
+                            <Grid
+                                item
+                                xs={12}
+                                sx={{ display: "flex", flexDirection: "row" }}
                             >
-                                {location.city}, {location.state}
-                            </Typography>
-                        </Box>
-
-                        <Box sx={{ marginLeft: 1, marginTop: 2 }}>
-                            <Typography component="p" variant="subtitle1">
-                                Temperature: {temperature}°
-                            </Typography>
-                            <Typography component="p" variant="subtitle1">
-                                Feels like: {feelsLike}°
-                            </Typography>
-                            <Typography component="p" variant="subtitle1">
-                                Wind: {currentData.wind_speed} m/s
-                            </Typography>
-                            <Typography component="p" variant="subtitle1">
-                                Humidity: {currentData.humidity} %
-                            </Typography>
-                        </Box>
+                                <Box>
+                                    <Box
+                                        component="img"
+                                        src={`http://openweathermap.org/img/wn/${currentData.weather[0].icon}@2x.png`}
+                                        alt=""
+                                    />
+                                </Box>
+                                <Box>
+                                    <Typography
+                                        component="p"
+                                        variant="subtitle1"
+                                    >
+                                        Temperature: {temperature}°
+                                    </Typography>
+                                    <Typography
+                                        component="p"
+                                        variant="subtitle1"
+                                    >
+                                        Feels like: {feelsLike}°
+                                    </Typography>
+                                    <Typography
+                                        component="p"
+                                        variant="subtitle1"
+                                    >
+                                        Wind: {currentData.wind_speed} m/s
+                                    </Typography>
+                                    <Typography
+                                        component="p"
+                                        variant="subtitle1"
+                                    >
+                                        Humidity: {currentData.humidity} %
+                                    </Typography>
+                                </Box>
+                            </Grid>
+                        </Grid>
                     </Grid>
 
                     <Grid
                         item
                         xs={12}
-                        lg={9}
+                        lg={8}
                         sx={{ paddingLeft: 1, paddingTop: 1 }}
                     >
                         <Tabs value={activeTab} onChange={handleTabChange}>
@@ -86,7 +124,13 @@ function DetailedInfo({ id, location, currentData, dailyData, hourlyData }) {
                         )}
                     </Grid>
 
-                    <Grid item xs={12} sx={{ marginTop: 2 }}>
+                    <Grid
+                        item
+                        xs={12}
+                        alignItems="end"
+                        justifyContent="center"
+                        sx={{ display: "flex", marginBottom: 0 }}
+                    >
                         <Typography
                             component="p"
                             variant="body2"
