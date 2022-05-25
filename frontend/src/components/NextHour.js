@@ -17,6 +17,9 @@ const NextHour = ({ data }) => {
             <Typography component="p" variant="h5" textAlign="center">
                 {temperature}°
             </Typography>
+            <Typography component="p" variant="subtitle2" textAlign="center">
+                {data.weather[0].description}
+            </Typography>
             <Typography component="p" variant="subtitle1" textAlign="center">
                 {hour}
             </Typography>

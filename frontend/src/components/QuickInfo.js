@@ -21,7 +21,15 @@ function QuickInfo({ location, id, data, active, onToggle, onDelete }) {
     let temperature = Math.round(data.temp);
 
     return (
-        <Grid item xs={12} sm={6} md={4} lg={3} align="center">
+        <Grid
+            item
+            xs={12}
+            sm={6}
+            md={4}
+            lg={3}
+            align="center"
+            sx={{ height: 225 }}
+        >
             <Card elevation={16}>
                 <CardHeader
                     sx={{ paddingTop: 1, paddingBottom: 0 }}
