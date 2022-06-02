@@ -11,7 +11,7 @@ let corsOptions = {
 
 app.use(express.json());
 app.use(cors(corsOptions));
-app.use("/api", routes);
+app.use("/", routes);
 
 const main = () => {
     app.listen(port, () => {

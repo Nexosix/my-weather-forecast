@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
     Autocomplete,
     Card,
@@ -8,20 +9,80 @@ import {
     Typography,
 } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import cities from "../data/polandCities.json";
 
 const AddCity = ({ handleAdd }) => {
-    const handleClick = () => {
-        const val = document.querySelector("#select-city").value;
-        if (!val) return;
+    const [searchLocations, setSearchLocations] = useState([]);
 
-        const city = val.split(",")[0].trim();
-        const state = val.split(",")[1].trim();
-        const { lat, lng } = cities.find(
+    const debounce = (cb, delay = 800) => {
+        let timeout;
+
+        return (...args) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                cb(...args);
+            }, delay);
+        };
+    };
+
+    const updateSearchOptions = debounce((e) => getSearchOptions(e));
+
+    const getSearchOptions = async (e) => {
+        console.log(e.target.value);
+        const query = e.target.value;
+
+        if (query === "" || query === undefined) {
+            setSearchLocations([]);
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                `http://localhost:8080/api/search-city/${query}`
+            );
+
+            if (!response.ok) {
+                throw new Error(
+                    `Could not get response due to status: ${response.status} ${response.statusText}`
+                );
+            }
+
+            const locations = await response.json();
+            console.log(locations);
+            setSearchLocations(locations);
+        } catch (e) {
+            console.error(e);
+            return;
+        }
+    };
+
+    const handleClick = () => {
+        let inputValue = document.querySelector("#select-city").value;
+
+        if (inputValue === "") {
+            return;
+        }
+
+        inputValue = inputValue.split(", ");
+        const name = inputValue[0];
+        const state = inputValue[1];
+        const country = inputValue[2];
+
+        console.log(`${name}-${state}-${country}`);
+
+        const location = searchLocations.find(
             (location) =>
-                location.city === city && location.admin_name === state
+                location.name === name &&
+                location.state === state &&
+                location.country === country
         );
-        handleAdd({ city, state, lat, lng });
+
+        if (location === undefined) {
+            console.log("TEST");
+            return;
+        }
+
+        const { lat, lon } = location;
+        handleAdd({ city: name, state, lat, lng: lon });
     };
 
     return (
@@ -37,18 +98,28 @@ const AddCity = ({ handleAdd }) => {
                     }}
                 >
                     <Typography component="h4" variant="h5" sx={{ marginY: 4 }}>
-                        Choose city
+                        Search for places
                     </Typography>
                     <Autocomplete
                         id="select-city"
-                        options={cities}
+                        options={searchLocations}
                         getOptionLabel={(option) =>
-                            `${option.city}, ${option.admin_name}`
+                            `${option.name}, ${option.state}, ${option.country}`
                         }
+                        renderOption={(props, option) => (
+                            <li {...props} key={Math.random()}>
+                                {`${option.name}, ${option.state}, ${option.country}`}
+                            </li>
+                        )}
                         renderInput={(params) => (
-                            <TextField {...params} label="City" />
+                            <TextField
+                                key={params.inputProps.key}
+                                {...params}
+                                label="Search"
+                            />
                         )}
                         sx={{ width: "100%" }}
+                        onInput={(e) => updateSearchOptions(e)}
                     />
 
                     <IconButton

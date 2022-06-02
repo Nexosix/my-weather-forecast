@@ -1,7 +1,6 @@
 const router = require("express").Router();
-const currentWeather = require("./currentWeather");
-const forecast = require("./forecast");
+const api = require("./api");
 
-router.get("/current-weather/:city/:state/:country", currentWeather);
-router.get("/forecast/:lat/:lng", forecast);
+router.use("/api", api);
+
 module.exports = router;

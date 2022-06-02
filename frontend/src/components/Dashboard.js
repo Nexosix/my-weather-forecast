@@ -12,6 +12,7 @@ import React, { useEffect, useState } from "react";
 import QuickInfo from "./QuickInfo";
 import DetailedInfo from "./DetailedInfo";
 import AddCity from "./AddCity";
+import QuickInfoLoading from "./QuickInfoLoading";
 
 function Dashboard(props) {
     const [detailedInfo, setDetailedInfo] = useState(-1);
@@ -65,8 +66,6 @@ function Dashboard(props) {
                         hourly: data.hourly.slice(0, 6),
                     };
                 });
-
-                console.log(detailedWeatherData);
 
                 setLocationsCurrentData(currentWeatherData);
                 setLocationsDetailedData(detailedWeatherData);
@@ -160,96 +159,61 @@ function Dashboard(props) {
     };
 
     return (
-        <Container sx={{ paddingTop: 5 }}>
+        <Grid item xs={10} sm={12}>
             <Grid
                 container
-                rowSpacing={4}
+                rowSpacing={2}
                 columnSpacing={2}
-                justifyContent="center"
+                sx={{
+                    paddingTop: 0,
+                }}
             >
-                <Grid
-                    item
-                    xs={12}
-                    marginTop={3}
-                    marginBottom={2}
-                    justifyContent="center"
-                >
-                    <Box
-                        sx={{
-                            textAlign: "center",
-                        }}
-                    >
-                        <Typography component="h1" variant="h3">
-                            My Weather Forecast
-                        </Typography>
-                        <Typography component="h2" variant="subtitle1">
-                            Check the weather in any city in Poland!
-                        </Typography>
-                    </Box>
-                </Grid>
+                {isLoading &&
+                    locations.map((loc, idx) => <QuickInfoLoading key={idx} />)}
 
-                <Grid item xs={10} sm={12}>
-                    <Grid
-                        container
-                        rowSpacing={2}
-                        columnSpacing={2}
-                        sx={{
-                            paddingTop: 0,
-                        }}
-                    >
-                        {isLoading && (
-                            <Typography component="p" variant="h5">
-                                Loading...
-                            </Typography>
-                        )}
-                        {!isLoading &&
-                            locationsCurrentData.length > 0 &&
-                            locationsCurrentData.map((data, index) => {
-                                if (locations[index] === undefined) return null;
-                                return (
-                                    <QuickInfo
-                                        key={index}
-                                        id={index}
-                                        location={locations[index]}
-                                        data={data}
-                                        active={detailedInfo === index}
-                                        onToggle={handleToggleDetailedInfo}
-                                        onDelete={handleDialogOpen}
-                                    />
-                                );
-                            })}
-                        <AddCity handleAdd={handleAddCard} />
-                    </Grid>
-                </Grid>
+                {!isLoading &&
+                    locationsCurrentData.length > 0 &&
+                    locationsCurrentData.map((data, index) => {
+                        if (locations[index] === undefined) return null;
+                        return (
+                            <QuickInfo
+                                key={index}
+                                id={index}
+                                location={locations[index]}
+                                data={data}
+                                active={detailedInfo === index}
+                                onToggle={handleToggleDetailedInfo}
+                                onDelete={handleDialogOpen}
+                            />
+                        );
+                    })}
+
+                <AddCity handleAdd={handleAddCard} />
 
                 {detailedInfo >= 0 && locations[detailedInfo] !== undefined && (
-                    <Grid item xs={12}>
-                        <DetailedInfo
-                            id={detailedInfo}
-                            location={locations[detailedInfo]}
-                            currentData={locationsCurrentData[detailedInfo]}
-                            dailyData={
-                                locationsDetailedData[detailedInfo].daily
-                            }
-                            hourlyData={
-                                locationsDetailedData[detailedInfo].hourly
-                            }
-                        />
-                    </Grid>
+                    <DetailedInfo
+                        id={detailedInfo}
+                        location={locations[detailedInfo]}
+                        currentData={locationsCurrentData[detailedInfo]}
+                        dailyData={locationsDetailedData[detailedInfo].daily}
+                        hourlyData={locationsDetailedData[detailedInfo].hourly}
+                    />
                 )}
+
+                {/* Modal */}
+                <Dialog open={openDialog} onClose={handleDialogClose}>
+                    <DialogTitle>
+                        Delete
+                        {locations[locationToRemove] &&
+                            ` ${locations[locationToRemove].city}, ${locations[locationToRemove].state}?`}
+                    </DialogTitle>
+                    <DialogActions>
+                        <Button onClick={handleDialogClose}>No</Button>
+                        <Button onClick={handleDialogClose}>Yes</Button>
+                    </DialogActions>
+                </Dialog>
             </Grid>
-            <Dialog open={openDialog} onClose={handleDialogClose}>
-                <DialogTitle>
-                    Delete
-                    {locations[locationToRemove] &&
-                        ` ${locations[locationToRemove].city}, ${locations[locationToRemove].state}?`}
-                </DialogTitle>
-                <DialogActions>
-                    <Button onClick={handleDialogClose}>No</Button>
-                    <Button onClick={handleDialogClose}>Yes</Button>
-                </DialogActions>
-            </Dialog>
-        </Container>
+        </Grid>
     );
 }
 
