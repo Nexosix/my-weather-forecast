@@ -21,7 +21,7 @@ function DetailedInfo({ id, location, currentData, dailyData, hourlyData }) {
 
     return (
         <Grid item xs={12}>
-            <Paper elevation={16} sx={{ paddingX: 3, paddingY: 0 }}>
+            <Paper elevation={4} sx={{ paddingX: 3, paddingY: 0 }}>
                 <Grid container sx={{ minHeight: 270 }}>
                     <Grid item xs={12} lg={4}>
                         <Grid

@@ -11,7 +11,7 @@ import DetailedInfo from "./DetailedInfo";
 import AddCity from "./AddCity";
 import QuickInfoLoading from "./QuickInfoLoading";
 
-function Dashboard(props) {
+function Dashboard() {
     const [detailedInfo, setDetailedInfo] = useState(-1);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -155,6 +155,27 @@ function Dashboard(props) {
         localStorage.setItem("locations", JSON.stringify(updatedLocations));
     };
 
+    const refreshLocationData = async (id) => {
+        const location = locations[id];
+
+        if (location === undefined) return;
+
+        let data = await getForecastData(location);
+
+        setLocationsCurrentData((prevState) => {
+            prevState[id] = data.current;
+            return [...prevState];
+        });
+
+        setLocationsDetailedData((prevState) => {
+            prevState[id] = {
+                daily: data.daily,
+                hourly: data.hourly,
+            };
+            return [...prevState];
+        });
+    };
+
     return (
         <Grid item xs={10} sm={12}>
             <Grid
@@ -181,13 +202,14 @@ function Dashboard(props) {
                                 active={detailedInfo === index}
                                 onToggle={handleToggleDetailedInfo}
                                 onDelete={handleDialogOpen}
+                                onRefresh={refreshLocationData}
                             />
                         );
                     })}
 
                 <AddCity handleAdd={handleAddCard} />
 
-                {detailedInfo >= 0 && locations[detailedInfo] !== undefined && (
+                {detailedInfo >= 0 && locationsDetailedData[detailedInfo] && (
                     <DetailedInfo
                         id={detailedInfo}
                         location={locations[detailedInfo]}
@@ -205,8 +227,8 @@ function Dashboard(props) {
                             ` ${locations[locationToRemove].city}, ${locations[locationToRemove].state}?`}
                     </DialogTitle>
                     <DialogActions>
-                        <Button onClick={handleDialogClose}>No</Button>
-                        <Button onClick={handleDialogClose}>Yes</Button>
+                        <Button onClick={handleDialogClose}>Cancel</Button>
+                        <Button onClick={handleDialogClose}>Delete</Button>
                     </DialogActions>
                 </Dialog>
             </Grid>

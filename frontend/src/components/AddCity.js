@@ -87,7 +87,7 @@ const AddCity = ({ handleAdd }) => {
 
     return (
         <Grid item xs={12} sm={6} md={4} lg={3} align="center">
-            <Card elevation={16} sx={{ height: 200 }}>
+            <Card elevation={4} sx={{ height: 200 }}>
                 <CardContent
                     sx={{
                         height: "100%",

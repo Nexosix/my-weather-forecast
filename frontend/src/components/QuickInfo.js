@@ -13,9 +13,21 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 
-function QuickInfo({ location, id, data, active, onToggle, onDelete }) {
+function QuickInfo({
+    location,
+    id,
+    data,
+    active,
+    onToggle,
+    onDelete,
+    onRefresh,
+}) {
     const handleRemove = () => {
         onDelete(id);
+    };
+
+    const handleRefresh = () => {
+        onRefresh(id);
     };
 
     let temperature = Math.round(data.temp);
@@ -30,7 +42,7 @@ function QuickInfo({ location, id, data, active, onToggle, onDelete }) {
             align="center"
             sx={{ height: 225 }}
         >
-            <Card elevation={16}>
+            <Card elevation={4}>
                 <CardHeader
                     sx={{ paddingTop: 1, paddingBottom: 0 }}
                     action={
@@ -42,7 +54,7 @@ function QuickInfo({ location, id, data, active, onToggle, onDelete }) {
                                     <ExpandMoreIcon />
                                 )}
                             </IconButton>
-                            <IconButton onClick={() => alert("refresh")}>
+                            <IconButton onClick={handleRefresh}>
                                 <RefreshIcon />
                             </IconButton>
                             <IconButton onClick={handleRemove}>
