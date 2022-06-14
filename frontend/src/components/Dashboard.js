@@ -11,7 +11,7 @@ import DetailedInfo from "./DetailedInfo";
 import AddCity from "./AddCity";
 import QuickInfoLoading from "./QuickInfoLoading";
 
-function Dashboard() {
+function Dashboard({ onAlert }) {
     const [detailedInfo, setDetailedInfo] = useState(-1);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -34,8 +34,12 @@ function Dashboard() {
             `http://localhost:8080/api/forecast/${location.lat}/${location.lng}`,
             options
         );
-        const data = await response.json();
 
+        if (!response.ok) {
+            throw new Error("Could not retrieve data from server");
+        }
+
+        const data = await response.json();
         return data;
     };
 
@@ -53,7 +57,14 @@ function Dashboard() {
                     weatherData.push(data);
                 }
 
-                weatherData = await Promise.all(weatherData);
+                try {
+                    weatherData = await Promise.all(weatherData);
+                } catch (e) {
+                    onAlert({
+                        type: "error",
+                        message: "Could not retrieve data from server",
+                    });
+                }
                 const currentWeatherData = weatherData.map(
                     (data) => data.current
                 );
@@ -89,7 +100,7 @@ function Dashboard() {
 
     const handleDialogClose = (event) => {
         if (event.currentTarget.type === "button") {
-            if (event.currentTarget.textContent === "Yes") {
+            if (event.currentTarget.textContent === "Delete") {
                 deleteCard(locationToRemove);
                 setLocationToRemove(null);
             }
@@ -116,7 +127,17 @@ function Dashboard() {
         setLocations(existingLocations);
         localStorage.setItem("locations", JSON.stringify(existingLocations));
 
-        const weatherData = await getForecastData(location);
+        let weatherData;
+
+        try {
+            weatherData = await getForecastData(location);
+        } catch (e) {
+            onAlert({
+                type: "error",
+                message: "Could not retrieve data from server",
+            });
+            return;
+        }
 
         setLocationsCurrentData((prevState) => [
             ...prevState,
@@ -133,7 +154,7 @@ function Dashboard() {
             detailedWeatherData,
         ]);
 
-        return;
+        onAlert({ type: "success", message: "Added new city successfully!" });
     };
 
     const deleteCard = (id) => {
@@ -153,6 +174,8 @@ function Dashboard() {
 
         setLocations(updatedLocations);
         localStorage.setItem("locations", JSON.stringify(updatedLocations));
+
+        onAlert({ type: "success", message: "Deleted city succesfully!" });
     };
 
     const refreshLocationData = async (id) => {
@@ -160,7 +183,17 @@ function Dashboard() {
 
         if (location === undefined) return;
 
-        let data = await getForecastData(location);
+        let data;
+
+        try {
+            data = await getForecastData(location);
+        } catch (e) {
+            onAlert({
+                type: "error",
+                message: "Could not retrieve data from server",
+            });
+            return;
+        }
 
         setLocationsCurrentData((prevState) => {
             prevState[id] = data.current;

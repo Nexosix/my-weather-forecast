@@ -1,9 +1,12 @@
 import { Container, Grid, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
+import React, { useState } from "react";
+import AlertBox from "./AlertBox";
 import Dashboard from "./Dashboard";
 
 function App() {
+    const [alertInfo, setAlertInfo] = useState(null);
+
     return (
         <Container sx={{ paddingTop: 5 }}>
             <Grid
@@ -33,7 +36,17 @@ function App() {
                     </Box>
                 </Grid>
 
-                <Dashboard />
+                {alertInfo && (
+                    <Grid item xs={12} md={6}>
+                        <AlertBox
+                            type={alertInfo.type}
+                            message={alertInfo.message}
+                            active={true}
+                            onClose={setAlertInfo}
+                        />
+                    </Grid>
+                )}
+                <Dashboard onAlert={setAlertInfo} />
             </Grid>
         </Container>
     );
