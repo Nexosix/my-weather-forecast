@@ -122,9 +122,9 @@ function Dashboard({ onAlert }) {
             existingLocations = [];
         } else {
             existingLocations = JSON.parse(existingLocations);
-            existingLocations.push(location);
         }
 
+        existingLocations.push(location);
         setLocations(existingLocations);
         localStorage.setItem("locations", JSON.stringify(existingLocations));
 

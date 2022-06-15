@@ -28,7 +28,7 @@ function AlertBox({ type, message, active, onClose }) {
 
     return (
         <Collapse in={open}>
-            <Alert severity={type} onClose={() => handleClose}>
+            <Alert severity={type} onClose={handleClose}>
                 {message}
             </Alert>
         </Collapse>
