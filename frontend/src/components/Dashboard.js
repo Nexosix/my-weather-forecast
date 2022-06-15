@@ -64,14 +64,15 @@ function Dashboard({ onAlert }) {
                         type: "error",
                         message: "Could not retrieve data from server",
                     });
+                    return;
                 }
                 const currentWeatherData = weatherData.map(
                     (data) => data.current
                 );
                 const detailedWeatherData = weatherData.map((data) => {
                     return {
-                        daily: data.daily.slice(0, 6),
-                        hourly: data.hourly.slice(0, 6),
+                        daily: data.daily,
+                        hourly: data.hourly,
                     };
                 });
 
@@ -145,8 +146,8 @@ function Dashboard({ onAlert }) {
         ]);
 
         const detailedWeatherData = {
-            daily: weatherData.daily.slice(0, 6),
-            hourly: weatherData.hourly.slice(0, 6),
+            daily: weatherData.daily,
+            hourly: weatherData.hourly,
         };
 
         setLocationsDetailedData((prevState) => [
@@ -244,7 +245,6 @@ function Dashboard({ onAlert }) {
 
                 {detailedInfo >= 0 && locationsDetailedData[detailedInfo] && (
                     <DetailedInfo
-                        id={detailedInfo}
                         location={locations[detailedInfo]}
                         currentData={locationsCurrentData[detailedInfo]}
                         dailyData={locationsDetailedData[detailedInfo].daily}

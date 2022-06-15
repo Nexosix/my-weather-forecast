@@ -30,9 +30,6 @@ function App() {
                         <Typography component="h1" variant="h3">
                             My Weather Forecast
                         </Typography>
-                        <Typography component="h2" variant="subtitle1">
-                            Check the weather in any city in Poland!
-                        </Typography>
                     </Box>
                 </Grid>
 

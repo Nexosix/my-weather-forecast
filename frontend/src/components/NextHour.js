@@ -5,7 +5,7 @@ const NextHour = ({ data }) => {
     const temperature = Math.round(data.temp);
 
     return (
-        <Grid item xs={4} sm={4} md={2} align="center">
+        <>
             <Box
                 component="img"
                 src={`http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`}
@@ -23,7 +23,7 @@ const NextHour = ({ data }) => {
             <Typography component="p" variant="subtitle1" textAlign="center">
                 {hour}
             </Typography>
-        </Grid>
+        </>
     );
 };
 
