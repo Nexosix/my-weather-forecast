@@ -2,18 +2,19 @@ import React, { useState } from "react";
 import { Grid, IconButton } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import useWindowSize from "../hooks/useWindowSize";
 
 function Carousel({ elements }) {
-    const visibleItems = 5;
+    const windowSize = useWindowSize();
     const [counter, setCounter] = useState(0);
 
+    let visibleItems = windowSize.width > 640 ? 5 : 3;
+
     return (
-        <Grid container>
+        <Grid container justifyContent="center">
             <Grid
                 item
-                xs={2}
-                sm={2}
-                md={1}
+                xs={1}
                 sx={{
                     display: "flex",
                     justifyContent: "center",
@@ -32,14 +33,7 @@ function Carousel({ elements }) {
                 .slice(counter, counter + visibleItems)
                 .map((element, index) => {
                     return (
-                        <Grid
-                            item
-                            key={index}
-                            xs={4}
-                            sm={4}
-                            md={2}
-                            align="center"
-                        >
+                        <Grid item key={index} xs={3} sm={2} align="center">
                             {element}
                         </Grid>
                     );
@@ -47,9 +41,7 @@ function Carousel({ elements }) {
 
             <Grid
                 item
-                xs={2}
-                sm={2}
-                md={1}
+                xs={1}
                 sx={{
                     display: "flex",
                     justifyContent: "center",

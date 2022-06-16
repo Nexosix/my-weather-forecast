@@ -4,12 +4,16 @@ import {
     DialogTitle,
     Grid,
     Button,
+    Box,
+    Fab,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import QuickInfo from "./QuickInfo";
 import DetailedInfo from "./DetailedInfo";
-import AddCity from "./AddCity";
+import AddCityDialog from "./AddCityDialog";
 import QuickInfoLoading from "./QuickInfoLoading";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteCityDialog from "./DeleteCityDialog";
 
 function Dashboard({ onAlert }) {
     const [detailedInfo, setDetailedInfo] = useState(-1);
@@ -19,7 +23,8 @@ function Dashboard({ onAlert }) {
     const [locationsCurrentData, setLocationsCurrentData] = useState([]);
     const [locationsDetailedData, setLocationsDetailedData] = useState([]);
 
-    const [openDialog, setOpenDialog] = useState(false);
+    const [isOpenAddDialog, setIsOpenAddDialog] = useState(false);
+    const [isOpenDeleteDialog, setIsOpenDeleteDialog] = useState(false);
     const [locationToRemove, setLocationToRemove] = useState(null);
 
     const getForecastData = async (location) => {
@@ -96,17 +101,17 @@ function Dashboard({ onAlert }) {
 
     const handleDialogOpen = (id) => {
         setLocationToRemove(id);
-        setOpenDialog(true);
+        setIsOpenDeleteDialog(true);
     };
 
-    const handleDialogClose = (event) => {
+    const handleDeleteDialogClose = (event) => {
         if (event.currentTarget.type === "button") {
             if (event.currentTarget.textContent === "Delete") {
                 deleteCard(locationToRemove);
                 setLocationToRemove(null);
             }
         }
-        setOpenDialog(false);
+        setIsOpenDeleteDialog(false);
     };
 
     const handleAddCard = async (location) => {
@@ -211,61 +216,83 @@ function Dashboard({ onAlert }) {
     };
 
     return (
-        <Grid item xs={10} sm={12}>
-            <Grid
-                container
-                rowSpacing={2}
-                columnSpacing={2}
+        <>
+            <Grid item xs={10} sm={12}>
+                <Grid container rowSpacing={2} columnSpacing={2} paddingTop={0}>
+                    {isLoading &&
+                        locations.map((loc, idx) => (
+                            <QuickInfoLoading key={idx} />
+                        ))}
+
+                    {!isLoading &&
+                        locationsCurrentData.length > 0 &&
+                        locationsCurrentData.map((data, index) => {
+                            if (locations[index] === undefined) return null;
+                            return (
+                                <QuickInfo
+                                    key={index}
+                                    id={index}
+                                    location={locations[index]}
+                                    data={data}
+                                    active={detailedInfo === index}
+                                    onToggle={handleToggleDetailedInfo}
+                                    onDelete={handleDialogOpen}
+                                    onRefresh={refreshLocationData}
+                                />
+                            );
+                        })}
+
+                    {/* <AddCity handleAdd={handleAddCard} /> */}
+
+                    {detailedInfo >= 0 &&
+                        locationsDetailedData[detailedInfo] && (
+                            <DetailedInfo
+                                location={locations[detailedInfo]}
+                                currentData={locationsCurrentData[detailedInfo]}
+                                dailyData={
+                                    locationsDetailedData[detailedInfo].daily
+                                }
+                                hourlyData={
+                                    locationsDetailedData[detailedInfo].hourly
+                                }
+                            />
+                        )}
+
+                    {/* Modals */}
+
+                    {locationToRemove && (
+                        <DeleteCityDialog
+                            location={locations[locationToRemove]}
+                            isOpen={isOpenDeleteDialog}
+                            onClose={handleDeleteDialogClose}
+                        />
+                    )}
+
+                    <AddCityDialog
+                        isOpen={isOpenAddDialog}
+                        onClose={() => setIsOpenAddDialog(false)}
+                        handleAdd={handleAddCard}
+                    />
+                </Grid>
+            </Grid>
+
+            <Box
                 sx={{
-                    paddingTop: 0,
+                    width: "100%",
+                    position: "fixed",
+                    bottom: 0,
+                    textAlign: "end",
                 }}
             >
-                {isLoading &&
-                    locations.map((loc, idx) => <QuickInfoLoading key={idx} />)}
-
-                {!isLoading &&
-                    locationsCurrentData.length > 0 &&
-                    locationsCurrentData.map((data, index) => {
-                        if (locations[index] === undefined) return null;
-                        return (
-                            <QuickInfo
-                                key={index}
-                                id={index}
-                                location={locations[index]}
-                                data={data}
-                                active={detailedInfo === index}
-                                onToggle={handleToggleDetailedInfo}
-                                onDelete={handleDialogOpen}
-                                onRefresh={refreshLocationData}
-                            />
-                        );
-                    })}
-
-                <AddCity handleAdd={handleAddCard} />
-
-                {detailedInfo >= 0 && locationsDetailedData[detailedInfo] && (
-                    <DetailedInfo
-                        location={locations[detailedInfo]}
-                        currentData={locationsCurrentData[detailedInfo]}
-                        dailyData={locationsDetailedData[detailedInfo].daily}
-                        hourlyData={locationsDetailedData[detailedInfo].hourly}
-                    />
-                )}
-
-                {/* Modal */}
-                <Dialog open={openDialog} onClose={handleDialogClose}>
-                    <DialogTitle>
-                        Delete
-                        {locations[locationToRemove] &&
-                            ` ${locations[locationToRemove].city}, ${locations[locationToRemove].state}?`}
-                    </DialogTitle>
-                    <DialogActions>
-                        <Button onClick={handleDialogClose}>Cancel</Button>
-                        <Button onClick={handleDialogClose}>Delete</Button>
-                    </DialogActions>
-                </Dialog>
-            </Grid>
-        </Grid>
+                <Fab
+                    size="large"
+                    sx={{ marginRight: "30px", marginBottom: "30px" }}
+                    onClick={() => setIsOpenAddDialog(true)}
+                >
+                    <AddIcon />
+                </Fab>
+            </Box>
+        </>
     );
 }
 
